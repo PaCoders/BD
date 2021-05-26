@@ -150,9 +150,43 @@ WHERE clt_pais = 'e' AND clt_num IN (SELECT v1.vnt_clt
 														GROUP BY v2.vnt_art)
 									GROUP BY v1.vnt_art);
 
+/* 
+	================================================================================================
+									ENTREGABLES DE PRACTICAS
+	================================================================================================
+*/
+
+/*  Listado de clientes que han comprado más de un artículo entre 5 y el 15 de abril de 2021, 
+	ordenado por código de cliente de manera descendente. 
+ 	El listado deberá mostrar el número de cliente, el nombre del cliente y los apellidos del cliente con las siguientes cabeceras: 
+  	Código, Nombre, Apellidos.
+*/
+SELECT clt_num "Código", clt_nom "Nombre", clt_apell "Apellidos"
+FROM clientes
+WHERE clt_num IN (SELECT vnt_clt
+					FROM ventas
+					WHERE vnt_fch BETWEEN "05-04-2021" AND "15-04-2021"
+					GROUP BY vnt_clt
+					HAVING count(*) > 1)
+ORDER BY clt_num DESC;
 
 /*
-	ENTREGABLE - Listado de proveedores que suministran más artículos de color verde o azul que el proveedor número 5. El listado deberá mostrar el código y el nombre de los proveedores con todas sus letras en mayúsculas,
+	Listado que muestre la cantidad de artículos que hay de cada color. 
+	Solo deberán contarse aquellos artículos que han sido vendidos en el año 2021. 
+	La cabecera deberá mostrar dos columnas: color y cantidad.
+	Los colores no definidos deberán mostrarse con el texto ‘sin color’. Ordene el texto por cantidad de mayor a menor.
+*/
+
+SELECT IFNULL(art_col,"sin color") "Color", count(*) "Cantidad"
+FROM articulos
+WHERE art_num IN (SELECT vnt_art
+					FROM ventas
+					WHERE YEAR(vnt_fch) = 2021)
+GROUP BY art_col
+ORDER BY Cantidad DESC;
+
+/*
+	Listado de proveedores que suministran más artículos de color verde o azul que el proveedor número 5. El listado deberá mostrar el código y el nombre de los proveedores con todas sus letras en mayúsculas,
     y el listado deberá tener la siguiente cabecera: ‘Número’, ‘Nombre del proveedor’.
 */
 
@@ -160,8 +194,9 @@ SELECT prv_num "Número", upper(prv_nom) "Nombre del proveedor"
 FROM proveedores
 WHERE prv_num IN (SELECT a1.art_prv
 				  FROM articulos a1
-                  GROUP BY a1.art_prv
+				  WHERE a1.art_col IN ("verde","azul")
+				  GROUP BY a1.art_prv
                   HAVING count(*) > (SELECT count(*)
 										FROM articulos a2
-										WHERE a2.art_prv = 5 AND (a2.art_col = "verde" OR a2.art_col = "azul")));
-                            
+										WHERE a2.art_prv = 5 AND a2.art_col IN ("verde","azul")));
+        
