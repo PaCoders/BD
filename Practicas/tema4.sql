@@ -10,7 +10,7 @@ del artículo.
 
 SELECT art_nom "Nombre", art_col "Color", art_pc "Precio de compra", prv_nom "Nombre del proveedor"
 FROM articulos, proveedores
-WHERE art_pc > 10
+WHERE art_prv = prv_num AND art_pc > 10
 ORDER BY art_nom;
 
 /*
@@ -22,7 +22,7 @@ de la tienda alfabéticamente cuando la fecha coincida.
 
 SELECT tda_num "Numero Tienda", tda_pob "Población", tda_ger "Gerente", vnt_fch "Fecha de venta"
 FROM tiendas, ventas
-WHERE MONTH(vnt_fch) = 02 AND YEAR(vnt_fch) = 2020
+WHERE tda_num = vnt_tda AND MONTH(vnt_fch) = 02 AND YEAR(vnt_fch) = 2020
 ORDER BY vnt_fch DESC, tda_ger;
 
 /*
@@ -41,3 +41,57 @@ mostrar el número, nombre, color, obtenidos de la tabla artículos y el peso, o
 partir de la clasificación de la tabla pesos. Por ejemplo, si un artículo pesa 10, su peso
 será leve ya que está comprendido entre el peso_min (1) y el peso_max(100)
 */
+
+SELECT art_num, art_nom, art_col, peso_nom
+FROM articulos,pesos
+WHERE art_col = "azul" OR art_col = "rosa" OR art_col = "verde";
+
+/*
+    5 - Listado que muestre las ventas que los clientes de Barcelona han hecho en las tiendas
+que no son de Barcelona. El listado deberá mostrar el nombre, apellidos y población del
+cliente, la población de la tienda y la fecha de las ventas.
+*/
+
+SELECT clt_nom "Nombre", clt_apell "Apellidos", clt_pob "Población del Cliente", tda_pob "Población de la Tienda", vnt_fch "Fecha de las ventas"
+FROM clientes, tiendas, ventas
+WHERE clt_num = vnt_clt AND vnt_tda = tda_num AND clt_pob = "Barcelona" AND tda_pob != "Barcelona";
+
+/*
+   6 - Listado que muestre aquellos clientes que han realizado más de 2 compras y esté
+ordenado de mayor a menor ventas realizadas. El listado deberá mostrar el número,
+apellido y nombre del cliente, así como la cantidad de compras realizada.
+*/
+
+SELECT clt_num "Código", clt_apell "Apellidos", clt_nom "Nombre", count(*) "Cantidad de compras realizadas"
+FROM clientes, ventas
+WHERE clt_num = vnt_clt
+GROUP BY vnt_clt
+HAVING count(*) > 2
+ORDER BY count(*) DESC;
+
+/*
+    7 - Listado de tiendas junto con la cantidad de clientes distintos que han comprado en
+dichas tiendas. El listado deberá mostrar dos columnas: población de la tienda
+(tda_pob) y cantidad de clientes distintos (el código de los clientes en las ventas se
+indica en la columna vnt_clt). El listado deberá ordenarse por la segunda columna de
+manera descendente.
+*/
+
+SELECT tda_pob "Población de la tienda", count(*) "Cantidad de clientes distintos"
+FROM tiendas, ventas
+WHERE tda_num = vnt_tda
+GROUP BY tda_num
+ORDER BY count(*) DESC;
+
+
+
+
+
+
+
+
+
+
+
+
+
