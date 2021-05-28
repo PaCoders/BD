@@ -13,6 +13,8 @@
     SI QUEREMOS USAR ESTAS TABLAS, DEBEMOS ELIMINAR ANTES LAS TABLAS EXISTENTES
 */
 
+SET FOREIGN_KEY_CHECKS = 0; /* Eliminamos las restricciones de las claves foráneas para poder eliminar lo que tengamos */
+/* DROP TABLE nombre_de_tabla; Orden que utilizaremos para vaciar la base de datos */
 CREATE TABLE user (
     username varchar(50),
     password varchar(128) NOT NULL,
@@ -56,10 +58,11 @@ CREATE TABLE questionnaire_taken (
 );
 /* INSERTAMOS ALGUNOS DATOS PARA PODER MOSTRAR RESULTADOS */
 INSERT INTO user(username,password,email,first_name,last_name,country,birth_date,gender) VALUES
-("paquito_el_chocolatero","papasfritasconhuevo","paquito@outlook.es","Francisco","Rodríguez","España","01-05-1991","v"),
-("Shuu_Naty_97","misamigosmifamilia","shu_natY_97@hotmail.com","Natalia","García","España","11-06-1997","m"),
-("xXGuilleCodXx","vegetaeselmejo","guillermo2000@gmail.com","Guillermo","Sánchez","España","04-02-2000","v"),
-("JungHoseok","btslosmejores","elsa.1213@gmail.com","Elsa","Smith","Noruega","19-07-1999","m");
+("paquito_el_chocolatero","papasfritasconhuevo","paquito@outlook.es","Francisco","Rodríguez","España",19910501,"v"),
+("Shuu_Naty_97","misamigosmifamilia","shu_natY_97@hotmail.com","Natalia","García","España",19970611,"m"),
+("xXGuilleCodXx","vegetaeselmejo","guillermo2000@gmail.com","Guillermo","Sánchez","España",20000402,"v"),
+("JungHoseok","btslosmejores","elsa.1213@gmail.com","Elsa","Smith","Noruega",19990719,"m");
+
 INSERT INTO group(name,description,owner) VALUES
 ("quedadas","Grupo de quedadas","Shuu_Naty_97"),
 ("fans","Grupo de fans","JungHoseok");
@@ -69,12 +72,20 @@ INSERT INTO user_group(username,group_name) VALUES
 ("fans","xXGuilleCodXx");
 
 INSERT INTO questionnaire(name,questions,date_added) VALUES
-("Cuestionario sobre el uso del bolígrafo","1. ¿Usted usa el bolígrafo? ","10-05-2020"),
-("Tiempo de uso de los teléfonos","1. ¿Utiliza mucho el teléfono? 2. ¿Cuánto tiempo lo usa aproximadamente?","02-02-2019"),
-("Test sobre el deporte","1. ¿Realiza mucho ejercicio?",CURLDATE()); /* Obtenemos la fecha actual del sistema */
+("Cuestionario sobre el uso del bolígrafo","1. ¿Usted usa el bolígrafo? ",20200510),
+("Tiempo de uso de los teléfonos","1. ¿Utiliza mucho el teléfono? 2. ¿Cuánto tiempo lo usa aproximadamente?",20190202),
+("Test sobre el deporte","1. ¿Realiza mucho ejercicio?",CURDATE()); /* Obtenemos la fecha actual del sistema */
 
 INSERT INTO questionnaire_taken(id,date_taken,questionnaire_name,username,answers) VALUES
-(NULL,CURLDATE(),"Test sobre el deporte","paquito_el_chocolatero","Mister ejercicios me llaman"),
-(NULL,"05-01-2021","Tiempo de uso de los teléfonos","Shuu_Naty-97","Tu sabe segun el dia"),
-(NULL,"12-12-2020","Cuestionario sobre el uso del bolígrafo","JunHoseok","For study, I used to use too much."),
-(NULL,"11-09-2020","Tiempo de uso de los teléfonos","JunHoseok","I don't use mobile phone except when I'm bored in my room");
+(NULL,CURDATE(),"Test sobre el deporte","paquito_el_chocolatero","Mister ejercicios me llaman"),
+(NULL,20210105,"Tiempo de uso de los teléfonos","Shuu_Naty-97","Tu sabe segun el dia"),
+(NULL,20201212,"Cuestionario sobre el uso del bolígrafo","JunHoseok","For study, I used to use too much."),
+(NULL,2020,"Tiempo de uso de los teléfonos","JunHoseok","I don't use mobile phone except when I'm bored in my room");
+
+/*
+   ==================================================================================================
+                                    CONSULTAS RESUELTAS DEL EXAMEN
+   ==================================================================================================
+
+
+*/
